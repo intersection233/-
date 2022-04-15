@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Hotel Data</title>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <script src="jquery-3.6.0.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="update.js"></script>
+    </head>
+    
+    <body>
+        <h1>Hotel Data</h1>
+        <div style="text-align: center;">
+            <button class="button1" onclick="addRow()">Add a Row</button>
+            <button class="button2" onclick="saveFile()">Save File</button>
+        </div>
+        <div class="userlist">
+            <table id = "ut0" class="TableStyle">
+                <tbody id = "ut">
+                    
+                </tbody>
+            </table>
+        </div>
+
+    <script type="text/javascript">
+        mtr = document.getElementById("ut") ;
+
+        //使用ajax加载csv文件的数据
+        $.ajax({
+                url: "hotel.csv",
+                success: function(result) {
+                    frag = document.createDocumentFragment();
+
+                    // 对csv文件的数据先以行分割
+                    userList = result.split("\n");
+
+                    //设置第一行
+                     userary = userList[0].split(",");
+                     tr = document.createElement("tr");
+                     for(j = 0;j<userary.length;j++){
+                                    td = document.createElement("td");
+                                    td.append(userary[j]);
+                                    tr.appendChild(td);
+                        }
+                    td = document.createElement("td");
+                    td.append("DeleteRow");
+                    tr.appendChild(td);
+                    frag.appendChild(tr);
+                    
+
+                    // 我们在对每一行以逗号作分割
+                    for(i=1;i<userList.length;i++){
+                        userary = userList[i].split(",");
+                        tr = document.createElement("tr");           
+
+                        // 对每行的内容遍历到td标签去
+                        for(j = 0;j<userary.length;j++){
+                                    td = document.createElement("td");
+                                    td.append(userary[j]);
+                                    td.setAttribute("contenteditable","true");
+                                    tr.appendChild(td);
+                        }
+
+                        //设置删除按钮
+                        td = document.createElement("td");
+                        button_tmp = document.createElement("button");
+                        button_tmp.append("delete");
+                        button_tmp.setAttribute("type","button");
+                        //button样式填充父容器
+                        button_tmp.setAttribute("class","deleteButton");
+                        button_tmp.setAttribute("onclick","deleteRow(this)");
+                        td.appendChild(button_tmp);
+                        tr.appendChild(td);
+
+                        frag.appendChild(tr);
+                    }
+                    // 加载到web页面
+                    mtr.appendChild(frag);
+                }
+        });
+
+</script>
+    </body>
+</html>
